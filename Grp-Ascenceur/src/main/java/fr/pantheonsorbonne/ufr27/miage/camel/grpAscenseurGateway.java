@@ -23,6 +23,16 @@ public class grpAscenseurGateway {
 
     }
 
+    public void callAscenseur(String color, int etage){
+        if(color == "R"){
+            try (ProducerTemplate producerTemplate = camelContext.createProducerTemplate()) {
+                producerTemplate.sendBody("direct:callR", etage);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+    }
 
 }
 

@@ -2,6 +2,7 @@ package fr.pantheonsorbonne.ufr27.miage.resource;
 
 
 import fr.pantheonsorbonne.ufr27.miage.dto.Ascenseur;
+import fr.pantheonsorbonne.ufr27.miage.dto.GrpAscenseur;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 import javax.ws.rs.GET;
@@ -18,11 +19,15 @@ import java.util.Collection;
 public interface AscenseurService {
 
 
-    @Path("/list/{color}")
+    @Path("/listAscenseur/{color}")
     @GET
     Collection<Ascenseur> getAscenseurByColor(@PathParam String color);
 
-    @Path("/list")
+    @Path("/listAscenseur")
     @GET
     Collection<Ascenseur> getAscenseur();
+
+    @Path("/grpAscenseur/{color}")
+    @GET
+    GrpAscenseur getGrpAscenseur();
 }

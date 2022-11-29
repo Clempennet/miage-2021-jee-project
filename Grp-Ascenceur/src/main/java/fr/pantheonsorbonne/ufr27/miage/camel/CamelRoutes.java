@@ -31,7 +31,7 @@ public class CamelRoutes extends RouteBuilder {
 
         camelContext.setTracing(true);
 
-        from("direct:call")
+        from("direct:callR")
                 .multicast()
                 .to("jms:" + jmsPrefix + "ascenseur1?exchangePattern=InOut")
                 .to("jms:" + jmsPrefix + "ascenseur2?exchangePattern=InOut")

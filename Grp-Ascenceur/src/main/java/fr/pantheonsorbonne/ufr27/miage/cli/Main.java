@@ -1,6 +1,8 @@
 package fr.pantheonsorbonne.ufr27.miage.cli;
 
+import fr.pantheonsorbonne.ufr27.miage.camel.grpAscenseurGateway;
 import fr.pantheonsorbonne.ufr27.miage.dto.Ascenseur;
+import fr.pantheonsorbonne.ufr27.miage.dto.GrpAscenseur;
 import fr.pantheonsorbonne.ufr27.miage.resource.AscenseurService;
 import org.beryx.textio.TextIO;
 import org.beryx.textio.TextIoFactory;
@@ -18,14 +20,20 @@ public class Main implements Runnable {
     TextTerminal<?> terminal;
 
     @Inject
+    grpAscenseurGateway grpAscenseur;
+
+    @Inject
     @RestClient
     AscenseurService ascenseurService;
+
+    TextIO textIO;
 
     @Override
     public void run() {
 
         TextIO textIO = TextIoFactory.getTextIO();
         displayAscenseur();
+        grpAscenseur.callAscenseur(chooseGroupeAscenseur(),etage());
     }
 
     public void displayAscenseurByColor(String color){
@@ -39,6 +47,18 @@ public class Main implements Runnable {
         for (Ascenseur ascenseur : ascenseurService.getAscenseur()) {
             terminal.println("[" + ascenseur.getId() + "] " + ascenseur.getEtage() + ascenseur.isInError());
         }
+    }
+
+    public String chooseGroupeAscenseur(){
+        String color = textIO.newStringInputReader().read("Quel groupe d'ascenseur ? R,V,J");
+
+        return color;
+    }
+
+    public int etage(){
+        int etage = textIO.newIntInputReader().read("Quel étage ?");
+
+        return etage;
     }
 
 }
