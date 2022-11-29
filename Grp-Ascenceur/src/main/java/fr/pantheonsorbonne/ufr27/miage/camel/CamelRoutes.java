@@ -1,17 +1,9 @@
 package fr.pantheonsorbonne.ufr27.miage.camel;
 
 
-import fr.pantheonsorbonne.ufr27.miage.dao.NoSuchTicketException;
-import fr.pantheonsorbonne.ufr27.miage.dto.Booking;
-import fr.pantheonsorbonne.ufr27.miage.dto.ETicket;
-import fr.pantheonsorbonne.ufr27.miage.exception.CustomerNotFoundException;
-import fr.pantheonsorbonne.ufr27.miage.exception.ExpiredTransitionalTicketException;
-import fr.pantheonsorbonne.ufr27.miage.exception.UnsuficientQuotaForVenueException;
-import fr.pantheonsorbonne.ufr27.miage.service.TicketingService;
-import org.apache.camel.CamelContext;
-import org.apache.camel.CamelExecutionException;
-import org.apache.camel.Exchange;
-import org.apache.camel.Processor;
+import fr.pantheonsorbonne.ufr27.miage.model.Ascenseur;
+import fr.pantheonsorbonne.ufr27.miage.service.AppelerAscenseur;
+import org.apache.camel.*;
 import org.apache.camel.builder.RouteBuilder;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
@@ -26,10 +18,10 @@ public class CamelRoutes extends RouteBuilder {
     String jmsPrefix;
 
     @Inject
-    BookingGateway bookingHandler;
+    grpAscenseurGateway grpAscenseurGateway;
 
     @Inject
-    TicketingService ticketingService;
+    AppelerAscenseur appelerAscenseur;
 
     @Inject
     CamelContext camelContext;
@@ -39,7 +31,34 @@ public class CamelRoutes extends RouteBuilder {
 
         camelContext.setTracing(true);
 
-        onException(ExpiredTransitionalTicketException.class)
+        from("direct:call")
+                .multicast()
+                .to("jms:" + jmsPrefix + "ascenseur1?exchangePattern=InOut")
+                .to("jms:" + jmsPrefix + "ascenseur2?exchangePattern=InOut")
+                .to("jms:" + jmsPrefix + "ascenseur3?exchangePattern=InOut")
+                .to("jms:" + jmsPrefix + "ascenseur4?exchangePattern=InOut")
+                .to("jms:" + jmsPrefix + "ascenseur5?exchangePattern=InOut");
+
+
+        from("jms:" + jmsPrefix + "gather")
+                .aggregate(new nearAggregatorStrategy())
+                .header("etage")
+                .completionTimeout(1000L)
+                .bean(grpAscenseurGateway, "move");
+
+        from("direct:move")
+                .to("jms:" + jmsPrefix + "move?exchangePattern=InOut");
+
+        from("jms:" + jmsPrefix + "alert")
+                .bean(appelerAscenseur,"alert");
+
+
+
+
+
+
+
+      /*  onException(ExpiredTransitionalTicketException.class)
                 .handled(true)
                 .process(new ExpiredTransitionalTicketProcessor())
                 .setHeader("success", simple("false"))
@@ -78,17 +97,22 @@ public class CamelRoutes extends RouteBuilder {
         from("direct:ticketCancel")
                 .marshal().json()
                 .to("jms:topic:" + jmsPrefix + "cancellation");
-
+*/
     }
 
-    private static class ExpiredTransitionalTicketProcessor implements Processor {
-        @Override
-        public void process(Exchange exchange) throws Exception {
-            //https://camel.apache.org/manual/exception-clause.html
-            CamelExecutionException caused = (CamelExecutionException) exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Throwable.class);
+    public class nearAggregatorStrategy implements AggregationStrategy {
 
+        public Exchange aggregate(Exchange oldExchange, Exchange newExchange) {
+            // the first time we only have the new exchange
+            if (oldExchange == null) {
+                return newExchange;
+            }
 
-            exchange.getMessage().setBody(((ExpiredTransitionalTicketException) caused.getCause()).getExpiredTicketId());
+            if (oldExchange.getMessage().getBody(int.class) < newExchange.getMessage().getBody(int.class)) {
+                return oldExchange;
+            } else {
+                return newExchange;
+            }
         }
     }
 }

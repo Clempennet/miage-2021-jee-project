@@ -8,10 +8,10 @@
 	<packaging>pom</packaging>
 	<name>project-m1</name>
 	<modules>
-		<module> Ascenceur</module>
-		<module> Grp-Ascenceur</module>
-		<module> Tech</module>
-		<module>ticket-commons</module>
+		<module>Ascenceur</module>
+		<module>Grp-Ascenceur</module>
+		<module>Tech</module>
+
 </modules>
 
 </project>

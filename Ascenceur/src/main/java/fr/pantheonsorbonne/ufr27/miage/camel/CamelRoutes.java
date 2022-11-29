@@ -1,13 +1,6 @@
 package fr.pantheonsorbonne.ufr27.miage.camel;
-
-
-import fr.pantheonsorbonne.ufr27.miage.dao.NoSuchTicketException;
-import fr.pantheonsorbonne.ufr27.miage.dto.Booking;
-import fr.pantheonsorbonne.ufr27.miage.dto.ETicket;
-import fr.pantheonsorbonne.ufr27.miage.exception.CustomerNotFoundException;
 import fr.pantheonsorbonne.ufr27.miage.exception.ExpiredTransitionalTicketException;
-import fr.pantheonsorbonne.ufr27.miage.exception.UnsuficientQuotaForVenueException;
-import fr.pantheonsorbonne.ufr27.miage.service.TicketingService;
+import fr.pantheonsorbonne.ufr27.miage.service.AscenseurService;
 import org.apache.camel.CamelContext;
 import org.apache.camel.CamelExecutionException;
 import org.apache.camel.Exchange;
@@ -25,11 +18,12 @@ public class CamelRoutes extends RouteBuilder {
     @ConfigProperty(name = "fr.pantheonsorbonne.ufr27.miage.jmsPrefix")
     String jmsPrefix;
 
-    @Inject
-    BookingGateway bookingHandler;
 
     @Inject
-    TicketingService ticketingService;
+    AscenseurGateway ascenseurGateway;
+
+    @Inject
+    AscenseurService ascenseurService;
 
     @Inject
     CamelContext camelContext;
@@ -39,40 +33,54 @@ public class CamelRoutes extends RouteBuilder {
 
         camelContext.setTracing(true);
 
-        onException(ExpiredTransitionalTicketException.class)
-                .handled(true)
-                .process(new ExpiredTransitionalTicketProcessor())
-                .setHeader("success", simple("false"))
-                .log("Clearning expired transitional ticket ${body}")
-                .bean(ticketingService, "cleanUpTransitionalTicket");
+        from("jms:" + jmsPrefix + "ascenseur1?exchangePattern=InOut")//
+                .setBody(constant("1"))
+                .bean(ascenseurGateway, "sendEtageActuel1");
 
-        onException(UnsuficientQuotaForVenueException.class)
-                .handled(true)
-                .setHeader("success", simple("false"))
-                .setBody(simple("Vendor has not enough quota for this venue"));
+        from("jms:" + jmsPrefix + "ascenseur2?exchangePattern=InOut")//
+                .setBody(constant("1"))
+                .bean(ascenseurGateway, "sendEtageActuel2");
 
+        from("jms:" + jmsPrefix + "ascenseur3?exchangePattern=InOut")//
+                .setBody(constant("1"))
+                .bean(ascenseurGateway, "sendEtageActuel3");
 
-        onException(NoSuchTicketException.class)
-                .handled(true)
-                .setHeader("success", simple("false"))
-                .setBody(simple("Ticket has expired"));
+        from("jms:" + jmsPrefix + "ascenseur4?exchangePattern=InOut")//
+                .setBody(constant("1"))
+                .bean(ascenseurGateway, "sendEtageActuel4");
 
-        onException(CustomerNotFoundException.NoSeatAvailableException.class)
-                .handled(true)
-                .setHeader("success", simple("false"))
-                .setBody(simple("No seat is available"));
+        from("jms:" + jmsPrefix + "ascenseur5?exchangePattern=InOut")//
+                .setBody(constant("1"))
+                .bean(ascenseurGateway, "sendEtageActuel5");
 
 
-        from("jms:" + jmsPrefix + "booking?exchangePattern=InOut")//
-                .log("ticker received: ${in.headers}")//
-                .unmarshal().json(Booking.class)//
-                .bean(bookingHandler, "book").marshal().json()
-        ;
+
+        from("direct:etageActuel1")
+                .to("jms:topic:" + jmsPrefix + "gather");
+
+        from("direct:etageActuel2")
+                .to("jms:topic:" + jmsPrefix + "gather");
+
+        from("direct:etageActuel3")
+                .to("jms:topic:" + jmsPrefix + "gather");
+
+        from("direct:etageActuel4")
+                .to("jms:topic:" + jmsPrefix + "gather");
+
+        from("direct:etageActuel5")
+                .to("jms:topic:" + jmsPrefix + "gather");
 
 
-        from("jms:" + jmsPrefix + "ticket?exchangePattern=InOut")
-                .unmarshal().json(ETicket.class)
-                .bean(ticketingService, "emitTicket").marshal().json();
+        from("jms:" + jmsPrefix + "move?exchangePattern=InOut")
+                .bean(ascenseurService, "move");;
+
+
+
+        from("direct:technicien")
+                .to("jms:topic:" + jmsPrefix + "repair");
+
+        from("direct:alert")
+                .to("jms:topic:" + jmsPrefix + "alert");
 
 
         from("direct:ticketCancel")
@@ -81,14 +89,4 @@ public class CamelRoutes extends RouteBuilder {
 
     }
 
-    private static class ExpiredTransitionalTicketProcessor implements Processor {
-        @Override
-        public void process(Exchange exchange) throws Exception {
-            //https://camel.apache.org/manual/exception-clause.html
-            CamelExecutionException caused = (CamelExecutionException) exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Throwable.class);
-
-
-            exchange.getMessage().setBody(((ExpiredTransitionalTicketException) caused.getCause()).getExpiredTicketId());
-        }
-    }
 }
