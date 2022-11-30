@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Ascenseur {
+public class AscenseurGrp {
     int currentEtage; boolean isGoingUp; boolean isInError; boolean isDoorOpen;
     List<Integer>  selectedFloors = new ArrayList<>();
     List<Integer>  servedFloors = new ArrayList<>();
@@ -27,7 +27,7 @@ public class Ascenseur {
     }
 
 
-    public Ascenseur(int currentEtage, boolean isGoingUp, boolean isInError, boolean isDoorOpen, List<Integer> servedFloors) {
+    public AscenseurGrp(int currentEtage, boolean isGoingUp, boolean isInError, boolean isDoorOpen, List<Integer> servedFloors) {
         this.currentEtage = currentEtage;
         this.isGoingUp = isGoingUp;
         this.isInError = isInError;
@@ -82,8 +82,8 @@ public class Ascenseur {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Ascenseur ascenseur = (Ascenseur) o;
-        return currentEtage == ascenseur.currentEtage && isGoingUp == ascenseur.isGoingUp && isInError == ascenseur.isInError && isDoorOpen == ascenseur.isDoorOpen && Objects.equals(selectedFloors, ascenseur.selectedFloors) && Objects.equals(servedFloors, ascenseur.servedFloors);
+        AscenseurGrp ascenseurGrp = (AscenseurGrp) o;
+        return currentEtage == ascenseurGrp.currentEtage && isGoingUp == ascenseurGrp.isGoingUp && isInError == ascenseurGrp.isInError && isDoorOpen == ascenseurGrp.isDoorOpen && Objects.equals(selectedFloors, ascenseurGrp.selectedFloors) && Objects.equals(servedFloors, ascenseurGrp.servedFloors);
     }
 
     @Override

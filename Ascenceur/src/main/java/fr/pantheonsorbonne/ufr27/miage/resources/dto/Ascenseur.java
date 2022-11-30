@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Ascenceur {
+public class Ascenseur {
     int currentEtage; boolean isGoingUp; boolean isInError; boolean isDoorOpen;
     List<Integer>  selectedFloors = new ArrayList<>();
     List<Integer>  servedFloors = new ArrayList<>();
@@ -27,7 +27,7 @@ public class Ascenceur {
     }
 
 
-    public Ascenceur(int currentEtage, boolean isGoingUp, boolean isInError, boolean isDoorOpen, List<Integer> servedFloors) {
+    public Ascenseur(int currentEtage, boolean isGoingUp, boolean isInError, boolean isDoorOpen, List<Integer> servedFloors) {
         this.currentEtage = currentEtage;
         this.isGoingUp = isGoingUp;
         this.isInError = isInError;
@@ -81,8 +81,8 @@ public class Ascenceur {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Ascenceur ascenceur = (Ascenceur) o;
-        return currentEtage == ascenceur.currentEtage && isGoingUp == ascenceur.isGoingUp && isInError == ascenceur.isInError && isDoorOpen == ascenceur.isDoorOpen;
+        Ascenseur ascenseur = (Ascenseur) o;
+        return currentEtage == ascenseur.currentEtage && isGoingUp == ascenseur.isGoingUp && isInError == ascenseur.isInError && isDoorOpen == ascenseur.isDoorOpen;
     }
 
     @Override
