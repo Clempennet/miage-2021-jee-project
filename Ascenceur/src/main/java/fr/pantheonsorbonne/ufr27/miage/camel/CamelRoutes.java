@@ -82,10 +82,14 @@ public class CamelRoutes extends RouteBuilder {
         from("direct:alert")
                 .to("jms:topic:" + jmsPrefix + "alert");
 
+        from("direct:isOpen")
+                .to("jms:topic:" + jmsPrefix + "isOpen");
+
 
         from("direct:ticketCancel")
                 .marshal().json()
                 .to("jms:topic:" + jmsPrefix + "cancellation");
+
 
     }
 

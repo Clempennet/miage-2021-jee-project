@@ -13,4 +13,9 @@ public class AppelerAscenseurImpl implements AppelerAscenseur {
     public void alert(){
         System.out.println("ascenseur hs, nous appelons le technicien");
     }
+
+    @Override
+    public void entrer() {
+
+    }
 }

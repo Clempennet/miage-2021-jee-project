@@ -52,7 +52,8 @@ public class CamelRoutes extends RouteBuilder {
         from("jms:" + jmsPrefix + "alert")
                 .bean(appelerAscenseur,"alert");
 
-
+        from("jms:" + jmsPrefix + "isOpen")
+                .bean(appelerAscenseur,"entrer");
 
 
 

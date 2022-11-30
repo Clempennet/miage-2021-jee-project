@@ -46,4 +46,12 @@ public class AscenseurGatewayImpl implements AscenseurGateway {
         }
     }
 
+public void AscenseurIsOpen(int idAscenseur){
+    try (ProducerTemplate producerTemplate = camelContext.createProducerTemplate()) {
+        producerTemplate.sendBody("direct:isOpen",idAscenseur);
+    } catch (IOException e) {
+        throw new RuntimeException(e);
+    }
+}
+
 }
