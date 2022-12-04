@@ -33,45 +33,17 @@ public class CamelRoutes extends RouteBuilder {
 
         camelContext.setTracing(true);
 
-        from("jms:" + jmsPrefix + "ascenseur1?exchangePattern=InOut")//
-                .setBody(constant("1"))
-                .bean(ascenseurGateway, "sendEtageActuel1");
+        from("jms:" + jmsPrefix + "ascenseurR")
+                .bean(ascenseurGateway, "sendEtageActuelR");
 
-        from("jms:" + jmsPrefix + "ascenseur2?exchangePattern=InOut")//
-                .setBody(constant("1"))
-                .bean(ascenseurGateway, "sendEtageActuel2");
+        from("jms:" + jmsPrefix + "ascenseurJ")
+                .bean(ascenseurGateway, "sendEtageActuelJ");
 
-        from("jms:" + jmsPrefix + "ascenseur3?exchangePattern=InOut")//
-                .setBody(constant("1"))
-                .bean(ascenseurGateway, "sendEtageActuel3");
-
-        from("jms:" + jmsPrefix + "ascenseur4?exchangePattern=InOut")//
-                .setBody(constant("1"))
-                .bean(ascenseurGateway, "sendEtageActuel4");
-
-        from("jms:" + jmsPrefix + "ascenseur5?exchangePattern=InOut")//
-                .setBody(constant("1"))
-                .bean(ascenseurGateway, "sendEtageActuel5");
+        from("jms:" + jmsPrefix + "ascenseurV")
+                .bean(ascenseurGateway, "sendEtageActuelV");
 
 
-
-        from("direct:etageActuel1")
-                .to("jms:topic:" + jmsPrefix + "gather");
-
-        from("direct:etageActuel2")
-                .to("jms:topic:" + jmsPrefix + "gather");
-
-        from("direct:etageActuel3")
-                .to("jms:topic:" + jmsPrefix + "gather");
-
-        from("direct:etageActuel4")
-                .to("jms:topic:" + jmsPrefix + "gather");
-
-        from("direct:etageActuel5")
-                .to("jms:topic:" + jmsPrefix + "gather");
-
-
-        from("jms:" + jmsPrefix + "move?exchangePattern=InOut")
+        from("jms:" + jmsPrefix + "move")
                 .bean(ascenseurService, "move");;
 
 

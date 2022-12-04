@@ -1,9 +1,7 @@
 package fr.pantheonsorbonne.ufr27.miage.cli;
 
 import fr.pantheonsorbonne.ufr27.miage.camel.grpAscenseurGateway;
-import fr.pantheonsorbonne.ufr27.miage.dto.Ascenseur;
-import fr.pantheonsorbonne.ufr27.miage.dto.GrpAscenseur;
-import fr.pantheonsorbonne.ufr27.miage.resource.AscenseurService;
+import fr.pantheonsorbonne.ufr27.miage.resource.GrpAscenseurService;
 import org.beryx.textio.TextIO;
 import org.beryx.textio.TextIoFactory;
 import org.beryx.textio.TextTerminal;
@@ -24,30 +22,24 @@ public class Main implements Runnable {
 
     @Inject
     @RestClient
-    AscenseurService ascenseurService;
+    GrpAscenseurService grpAscenseurService;
 
     TextIO textIO;
+
+
 
     @Override
     public void run() {
 
+        System.out.println("rrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
         TextIO textIO = TextIoFactory.getTextIO();
-        displayAscenseur();
+
+
         grpAscenseur.callAscenseur(chooseGroupeAscenseur(),etage());
     }
 
-    public void displayAscenseurByColor(String color){
-        terminal.println("Tout les ascenseur " + color);
-        for (Ascenseur ascenseur : ascenseurService.getAscenseurByColor(color)) {
-            terminal.println("[" + ascenseur.getId() + "] " + ascenseur.getEtage() + ascenseur.isInError());
-        }
-    }
-    public void displayAscenseur(){
-        terminal.println("Tout les ascenseurs");
-        for (Ascenseur ascenseur : ascenseurService.getAscenseur()) {
-            terminal.println("[" + ascenseur.getId() + "] " + ascenseur.getEtage() + ascenseur.isInError());
-        }
-    }
+
+
 
     public String chooseGroupeAscenseur(){
         String color = textIO.newStringInputReader().read("Quel groupe d'ascenseur ? R,V,J");

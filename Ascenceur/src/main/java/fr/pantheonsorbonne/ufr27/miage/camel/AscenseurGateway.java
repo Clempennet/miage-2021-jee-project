@@ -1,7 +1,12 @@
 package fr.pantheonsorbonne.ufr27.miage.camel;
 
 public interface AscenseurGateway {
-    void sendEtageActuel1();
+    void sendEtageActuelR(int etage);
+
+    void sendEtageActuelJ(int etage);
+
+    void sendEtageActuelV(int etage);
+
     void AscenseurIsOpen(int idAscenseur);
 
 }

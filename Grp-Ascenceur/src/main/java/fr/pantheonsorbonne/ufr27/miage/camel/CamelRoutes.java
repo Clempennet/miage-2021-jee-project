@@ -32,12 +32,7 @@ public class CamelRoutes extends RouteBuilder {
         camelContext.setTracing(true);
 
         from("direct:callR")
-                .multicast()
-                .to("jms:" + jmsPrefix + "ascenseur1?exchangePattern=InOut")
-                .to("jms:" + jmsPrefix + "ascenseur2?exchangePattern=InOut")
-                .to("jms:" + jmsPrefix + "ascenseur3?exchangePattern=InOut")
-                .to("jms:" + jmsPrefix + "ascenseur4?exchangePattern=InOut")
-                .to("jms:" + jmsPrefix + "ascenseur5?exchangePattern=InOut");
+                .to("jms:" + jmsPrefix + "ascenseurR");
 
 
         from("jms:" + jmsPrefix + "gather")
@@ -47,7 +42,7 @@ public class CamelRoutes extends RouteBuilder {
                 .bean(grpAscenseurGateway, "move");
 
         from("direct:move")
-                .to("jms:" + jmsPrefix + "move?exchangePattern=InOut");
+                .to("jms:" + jmsPrefix + "move");
 
         from("jms:" + jmsPrefix + "alert")
                 .bean(appelerAscenseur,"alert");

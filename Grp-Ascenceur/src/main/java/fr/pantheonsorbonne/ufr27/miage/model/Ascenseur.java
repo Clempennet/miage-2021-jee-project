@@ -1,14 +1,24 @@
 package fr.pantheonsorbonne.ufr27.miage.model;
 
+import javax.persistence.*;
 
-public class Ascenseur extends GrpAscenseur {
-    
-  private int id;
-  private String direction;//monté descente
-  private int etage;
-  private int etageSelectionne;
-  private String etat; //hs ou op
-  private String porte; //ouverte ou fermé
+@Table(name = "ascenseur")
+@Entity
+public class Ascenseur {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id", nullable = false)
+  Integer id;
+  @Column()
+  int etage;
+  @Column(nullable = true)
+  boolean isGoingUp;
+  @Column(nullable = true)
+  boolean isInError;
+  @Column(nullable = true)
+  boolean isDoorOpen;
+
+
 
   public int getId() {
     return id;
@@ -16,14 +26,6 @@ public class Ascenseur extends GrpAscenseur {
 
   public void setId(int id) {
     this.id = id;
-  }
-
-  public String getDirection() {
-    return direction;
-  }
-
-  public void setDirection(String direction) {
-    this.direction = direction;
   }
 
   public int getEtage() {
@@ -34,27 +36,27 @@ public class Ascenseur extends GrpAscenseur {
     this.etage = etage;
   }
 
-  public int getEtageSelectionne() {
-    return etageSelectionne;
+  public boolean isGoingUp() {
+    return isGoingUp;
   }
 
-  public void setEtageSelectionne(int etageSelectionne) {
-    this.etageSelectionne = etageSelectionne;
+  public void setGoingUp(boolean goingUp) {
+    isGoingUp = goingUp;
   }
 
-  public String getEtat() {
-    return etat;
+  public boolean isInError() {
+    return isInError;
   }
 
-  public void setEtat(String etat) {
-    this.etat = etat;
+  public void setInError(boolean inError) {
+    isInError = inError;
   }
 
-  public String getPorte() {
-    return porte;
+  public boolean isDoorOpen() {
+    return isDoorOpen;
   }
 
-  public void setPorte(String porte) {
-    this.porte = porte;
+  public void setDoorOpen(boolean doorOpen) {
+    isDoorOpen = doorOpen;
   }
 }

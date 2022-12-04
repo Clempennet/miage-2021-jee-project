@@ -2,16 +2,12 @@ package fr.pantheonsorbonne.ufr27.miage.service;
 
 import fr.pantheonsorbonne.ufr27.miage.camel.AscenseurGateway;
 import fr.pantheonsorbonne.ufr27.miage.dto.Ascenseur;
-import fr.pantheonsorbonne.ufr27.miage.exception.CustomerNotFoundException;
-import fr.pantheonsorbonne.ufr27.miage.model.Customer;
-import fr.pantheonsorbonne.ufr27.miage.model.Venue;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import java.util.List;
 
 @ApplicationScoped
 public class AscenseurServiceImpl implements AscenseurService{
