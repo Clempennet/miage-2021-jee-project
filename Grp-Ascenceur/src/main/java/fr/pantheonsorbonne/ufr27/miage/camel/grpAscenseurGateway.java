@@ -7,6 +7,8 @@ import org.apache.camel.ProducerTemplate;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @ApplicationScoped
@@ -16,12 +18,35 @@ public class grpAscenseurGateway {
     CamelContext camelContext;
 
     public void move(int idAscenseur) {
+        System.out.println("moooooove");
         try (ProducerTemplate producerTemplate = camelContext.createProducerTemplate()) {
             producerTemplate.sendBody("direct:move", idAscenseur);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
+    }
+
+    public void entrer(int id){
+        try (ProducerTemplate producerTemplate = camelContext.createProducerTemplate()) {
+            producerTemplate.sendBody("direct:entrer", id);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void select(int etage, int ascenseurId){
+        List<Integer> l = new ArrayList<>();
+        l.add(etage);
+        l.add(ascenseurId);
+        try (ProducerTemplate producerTemplate = camelContext.createProducerTemplate()) {
+
+            producerTemplate.sendBody("direct:select", l);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void callAscenseur(String color, int etage){
@@ -55,5 +80,12 @@ public class grpAscenseurGateway {
 
     }
 
+    public void fin(int idAscenseur) {
+        try (ProducerTemplate producerTemplate = camelContext.createProducerTemplate()) {
+            producerTemplate.sendBody("direct:fin", idAscenseur);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
 

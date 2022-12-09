@@ -1,6 +1,7 @@
 package fr.pantheonsorbonne.ufr27.miage.camel;
 
 import fr.pantheonsorbonne.ufr27.miage.model.Ascenseur;
+import fr.pantheonsorbonne.ufr27.miage.service.AscenseurService;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 
@@ -10,7 +11,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.List;
 
 @ApplicationScoped
 public class AscenseurGatewayImpl implements AscenseurGateway {
@@ -21,6 +21,9 @@ public class AscenseurGatewayImpl implements AscenseurGateway {
     @PersistenceContext
     EntityManager em;
 
+    @Inject
+    AscenseurService ascenseurService;
+
 
     @Override
     @Transactional
@@ -30,6 +33,8 @@ public class AscenseurGatewayImpl implements AscenseurGateway {
             Ascenseur a = em.find(Ascenseur.class, i);
             if (a.getEtage() == etage) {
                 a.setDoorOpen(true);
+                open(a);
+
 
                 return;
             } else {
@@ -40,16 +45,21 @@ public class AscenseurGatewayImpl implements AscenseurGateway {
         }
         ascenseur.setEtage(etage);
         ascenseur.setDoorOpen(true);
+        open(ascenseur);
+
     }
+
+
 
     @Override
     @Transactional
-    public void sendEtageActuelJ(int etage) {
+    public void sendEtageActuelJ(int etage) throws InterruptedException {
         Ascenseur ascenseur = em.find(Ascenseur.class, 1);
-        for (int i = 5;i<=7;i++) {
+        for (int i = 6;i<=7;i++) {
             Ascenseur a = em.find(Ascenseur.class, i);
             if (a.getEtage() == etage) {
                 a.setDoorOpen(true);
+                open(a);
 
                 return;
             } else {
@@ -60,16 +70,20 @@ public class AscenseurGatewayImpl implements AscenseurGateway {
         }
         ascenseur.setEtage(etage);
         ascenseur.setDoorOpen(true);
+        open(ascenseur);
+
     }
 
     @Override
     @Transactional
-    public void sendEtageActuelV(int etage) {
+    public void sendEtageActuelV(int etage) throws InterruptedException {
         Ascenseur ascenseur = em.find(Ascenseur.class, 1);
         for (int i = 8;i<=10;i++) {
             Ascenseur a = em.find(Ascenseur.class, i);
             if (a.getEtage() == etage) {
                 a.setDoorOpen(true);
+                open(a);
+
 
                 return;
             } else {
@@ -80,6 +94,53 @@ public class AscenseurGatewayImpl implements AscenseurGateway {
         }
         ascenseur.setEtage(etage);
         ascenseur.setDoorOpen(true);
+        open(ascenseur);
+
+
+    }
+    @Override
+    @Transactional
+    public void entrer(int id){
+        Ascenseur a = em.find(Ascenseur.class,id);
+        if(a.isDoorOpen()){
+            try (ProducerTemplate producerTemplate = camelContext.createProducerTemplate()) {
+                producerTemplate.sendBody("direct:entrer",a.getId());
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    @Override
+    @Transactional
+    public void fin(int idAscenseur){
+        Ascenseur a = em.find(Ascenseur.class,idAscenseur);
+        a.setDoorOpen(false);
+        try (ProducerTemplate producerTemplate = camelContext.createProducerTemplate()) {
+            producerTemplate.sendBody("direct:fin",a.getEtage());
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void sortir(int etage) {
+        try (ProducerTemplate producerTemplate = camelContext.createProducerTemplate()) {
+            producerTemplate.sendBody("direct:sortir",etage);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void open(Ascenseur a){
+        try (ProducerTemplate producerTemplate = camelContext.createProducerTemplate()) {
+            producerTemplate.sendBody("direct:open",a.getId());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -99,5 +160,6 @@ public void AscenseurIsOpen(int idAscenseur){
         throw new RuntimeException(e);
     }
 }
+
 
 }

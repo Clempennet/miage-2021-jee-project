@@ -31,21 +31,42 @@ public class CamelRoutes extends RouteBuilder {
 
         camelContext.setTracing(true);
 
+        //Appel un groupe d'ascenseur
         from("direct:callR")
                 .to("jms:" + jmsPrefix + "ascenseurR");
 
+        from("direct:callJ")
+                .to("jms:" + jmsPrefix + "ascenseurJ");
 
-        from("jms:" + jmsPrefix + "gather")
-                .aggregate(new nearAggregatorStrategy())
-                .header("etage")
-                .completionTimeout(1000L)
-                .bean(grpAscenseurGateway, "move");
+        from("direct:callV")
+                .to("jms:" + jmsPrefix + "ascenseurV");
+
+
+
+        from("direct:entrer")
+                .to("jms:" + jmsPrefix + "entrer");
+
+        from("jms:" + jmsPrefix + "entrer")
+                .bean(appelerAscenseur,"entrer");
+
+        from("direct:fin")
+                .to("jms:" + jmsPrefix + "fin");
+
+        from("jms:" + jmsPrefix + "fin")
+                .bean(appelerAscenseur,"fin");
+
+
+        from("direct:select")
+                .to("jms:" + jmsPrefix + "select");
+
+        from("jms:" + jmsPrefix + "sortir")
+                .bean(appelerAscenseur,"sortir");
+
 
         from("direct:move")
                 .to("jms:" + jmsPrefix + "move");
 
-        from("jms:" + jmsPrefix + "alert")
-                .bean(appelerAscenseur,"alert");
+
 
         from("jms:" + jmsPrefix + "isOpen")
                 .bean(appelerAscenseur,"entrer");

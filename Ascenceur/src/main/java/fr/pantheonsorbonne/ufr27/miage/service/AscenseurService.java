@@ -2,19 +2,14 @@ package fr.pantheonsorbonne.ufr27.miage.service;
 
 import fr.pantheonsorbonne.ufr27.miage.dto.Ascenseur;
 
+import javax.transaction.Transactional;
+import java.util.List;
+
 public interface AscenseurService {
-    public Ascenseur createNewAscenseur(int id, int etage, boolean isGoingUp, boolean isInError, boolean isDoorOpen);
-    public void moveToEtage(Ascenseur a,int etage);
+    public  void move(int idAscenseur, int etage) throws InterruptedException;
 
-    public void openDoor(Ascenseur a);
+    @Transactional
+    void select(List<Integer> l) throws InterruptedException;
 
-    public void closeDoor(Ascenseur a);
 
-    public void goDown(Ascenseur a);
-
-    public  void goUp(Ascenseur a);
-
-    public  void move(int idAscenseur, int etage);
-
-    public Ascenseur getAscenseur(int id);
 }

@@ -33,6 +33,7 @@ public class CamelRoutes extends RouteBuilder {
 
         camelContext.setTracing(true);
 
+        //Appel un groupe d'ascenseur
         from("jms:" + jmsPrefix + "ascenseurR")
                 .bean(ascenseurGateway, "sendEtageActuelR");
 
@@ -43,9 +44,35 @@ public class CamelRoutes extends RouteBuilder {
                 .bean(ascenseurGateway, "sendEtageActuelV");
 
 
+
+        from("jms:" + jmsPrefix + "entrer")
+                .bean(ascenseurGateway, "entrer");
+
+        from("direct:entrer")
+                .to("jms:topic:" + jmsPrefix + "entrer");
+
+
+        from("jms:" + jmsPrefix + "select")
+                .bean(ascenseurService, "select");
+
+
+        from("direct:open")
+                .to("jms:topic:" + jmsPrefix + "open");
+
+
+
         from("jms:" + jmsPrefix + "move")
                 .bean(ascenseurService, "move");;
 
+
+        from("direct:sortir")
+                .to("jms:topic:" + jmsPrefix + "sortir");
+
+        from("jms:" + jmsPrefix + "fin")
+                .bean(ascenseurGateway, "fin");
+
+        from("direct:fin")
+                .to("jms:topic:" + jmsPrefix + "fin");
 
 
         from("direct:technicien")

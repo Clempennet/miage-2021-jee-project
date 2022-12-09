@@ -2,6 +2,8 @@ package fr.pantheonsorbonne.ufr27.miage.resource;
 
 
 import fr.pantheonsorbonne.ufr27.miage.camel.grpAscenseurGateway;
+import fr.pantheonsorbonne.ufr27.miage.model.Usager;
+import fr.pantheonsorbonne.ufr27.miage.service.AppelerAscenseur;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -11,51 +13,56 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import java.util.List;
 
-@Path("GrpAscenseur")
+@Path("/")
 public class GrpAscenseurService {
     @PersistenceContext
     EntityManager em;
 
     @Inject
-    UsagerService usagerService;
+    AppelerAscenseur appelerAscenseur;
 
     @Inject
     fr.pantheonsorbonne.ufr27.miage.camel.grpAscenseurGateway grpAscenseurGateway;
 
 
-    @Path("getAscenseur")
-    @GET
-    public List getAscenseur() {
-        return em.createQuery(
-                        "SELECT c FROM Ascenseur c")
 
-                .getResultList();
-    }
-
-    @Path("")
-    @GET
-    public String getGrp() {
-        if (usagerService.u.getEtageActuel() == 9 || usagerService.u.getEtageActuel() == 0) {
-            return "R , J , V";
-        } else if (usagerService.u.getEtageActuel() <= 9) {
-            return "J";
-        } else if (usagerService.u.getEtageActuel() > 9 && usagerService.u.getEtageActuel() <= 20) {
-            return "R";
-        } else if (usagerService.u.getEtageActuel() > 20) {
-            return "V";
-        }
-        return "";
-    }
-
-    @Path("/{color}")
+    @Path("/group/{color}")
     @GET
     public String call(@PathParam("color") String color) {
-        grpAscenseurGateway.callAscenseur(color, 14);
+        //Appel tous les ascenseur d'une couleur
+        Usager u = em.find(Usager.class,1);
+        grpAscenseurGateway.callAscenseur(color, u.getEtage());
 
-        return "call " + color;
+        return "Vous avez appelé les ascenseurs " + color;
     }
 
+    @Path("/ascenseur/{id}")
+    @GET
+    public String entrer(@PathParam("id") int id) {
+        //Usager entre dans l'ascenseur id
+        grpAscenseurGateway.entrer(id);
+        return "Vous êtes entré dans l'ascenseur  "+ id;
+    }
 
+    @Path("/etage/{etage}")
+    @GET
+    public String etageSelect(@PathParam("etage") int etage) {
+        //Selectionne l'étage auquel veut se rendre l'usager
+        Usager u = em.find(Usager.class,1);
+        grpAscenseurGateway.select(etage,u.getIdAscenseur());
+
+        return "Vous êtes au  " + etage + "em étage";
+    }
+
+    @Path("/sortie")
+    @GET
+    public String sortir() {
+        //L'usager sort de l'ascenseur
+        Usager u = em.find(Usager.class,1);
+        grpAscenseurGateway.fin(u.getIdAscenseur());
+
+        return "Vous êtes sorti ";
+    }
 
 
 

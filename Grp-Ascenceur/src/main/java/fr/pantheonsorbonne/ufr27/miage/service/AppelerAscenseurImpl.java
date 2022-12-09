@@ -1,38 +1,42 @@
 package fr.pantheonsorbonne.ufr27.miage.service;
 
-import fr.pantheonsorbonne.ufr27.miage.dto.Ascenseur;
-import fr.pantheonsorbonne.ufr27.miage.dto.GrpAscenseur;
 import fr.pantheonsorbonne.ufr27.miage.model.Usager;
 
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import javax.transaction.Transactional;
+
 @ApplicationScoped
 public class AppelerAscenseurImpl implements AppelerAscenseur {
 
     @PersistenceContext
     EntityManager em;
 
-    public void alert(){
-        System.out.println("ascenseur hs, nous appelons le technicien");
+    @Override
+    @Transactional
+    public void entrer(int id) {
+        Usager u = em.find(Usager.class,1);
+        u.setIdAscenseur(id);
+        u.setEtage(-1);
     }
 
     @Override
-    public void entrer() {
-
+    @Transactional
+    public void sortir(int etage) {
+        Usager u = em.find(Usager.class,1);
+        u.setEtage(etage);
+        u.setIdAscenseur(-1);
     }
 
     @Override
-    public Collection<Ascenseur> getAscenseur() {
-        Collection<Ascenseur> ascenseurCollection = new LinkedList<>();
-        Ascenseur ascenseur = em.find(Ascenseur.class, 1);
-        ascenseurCollection.add(ascenseur);
-
-
-        return ascenseurCollection;
+    @Transactional
+    public void fin(int etage) {
+        Usager u = em.find(Usager.class,1);
+        u.setEtage(etage);
+        u.setIdAscenseur(-1);
     }
+
+
 }

@@ -1,39 +1,41 @@
 package fr.pantheonsorbonne.ufr27.miage.model;
 
+import javax.persistence.*;
+
+@Table(name = "usager")
+@Entity
 public class Usager {
-    private String nom;
-    private int etageActuel;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "num")
+    private int numEtudiant;
+    @Column(name = "etage")
+    private int etage;
 
-    private boolean isInAscenseur;
-
-    public Usager(String nom, int etageActuel, boolean isInAscenseur) {
-        this.nom = nom;
-        this.etageActuel = etageActuel;
-        this.isInAscenseur = isInAscenseur;
+    public int getIdAscenseur() {
+        return idAscenseur;
     }
 
-
-    public String getNom() {
-        return nom;
+    public void setIdAscenseur(int idAscenseur) {
+        this.idAscenseur = idAscenseur;
     }
 
-    public void setNom(String nom) {
-        this.nom = nom;
+    @Column(name = "idAscenseur")
+    private int idAscenseur;
+
+    public int getNumEtudiant() {
+        return numEtudiant;
     }
 
-    public int getEtageActuel() {
-        return etageActuel;
+    public void setNumEtudiant(int numEtudiant) {
+        this.numEtudiant = numEtudiant;
     }
 
-    public void setEtageActuel(int etageActuel) {
-        this.etageActuel = etageActuel;
+    public int getEtage() {
+        return etage;
     }
 
-    public boolean isInAscenseur() {
-        return isInAscenseur;
-    }
-
-    public void setInAscenseur(boolean inAscenseur) {
-        isInAscenseur = inAscenseur;
+    public void setEtage(int etage) {
+        this.etage = etage;
     }
 }

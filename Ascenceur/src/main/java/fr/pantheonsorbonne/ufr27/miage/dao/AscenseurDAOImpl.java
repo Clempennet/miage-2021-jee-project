@@ -15,13 +15,6 @@ public class AscenseurDAOImpl implements AscenseurDAO {
 
     @Override
     @Transactional
-    public Ascenseur createNewAscenseur(int id, int etage, boolean isGoingUp, boolean isInError, boolean isDoorOpen) {
-        Ascenseur a = new Ascenseur(id, etage, isGoingUp, isInError, isDoorOpen);
-        em.persist(a);
-        return a;
-    }
-    @Override
-    @Transactional
     public void deplacerAscenseur(int id, int etage) {
         fr.pantheonsorbonne.ufr27.miage.model.Ascenseur a = em.find(fr.pantheonsorbonne.ufr27.miage.model.Ascenseur.class,id);
         a.setEtage(etage);
