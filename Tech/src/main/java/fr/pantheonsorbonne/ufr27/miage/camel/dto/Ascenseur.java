@@ -1,4 +1,4 @@
-package fr.pantheonsorbonne.ufr27.miage.dto;
+package fr.pantheonsorbonne.ufr27.miage.camel.dto;
 
 
 import java.util.Objects;
@@ -10,8 +10,6 @@ public class Ascenseur {
     boolean isGoingUp;
     boolean isInError;
     boolean isDoorOpen;
-
-    String grpAscenseur;
 
     public int getId() {
         return id;
@@ -59,14 +57,6 @@ public class Ascenseur {
 
     public void setDoorOpen(boolean doorOpen) {
         isDoorOpen = doorOpen;
-    }
-
-    public String getGrpAscenseur() {
-        return grpAscenseur;
-    }
-
-    public void setGrpAscenseur(String grpAscenseur) {
-        this.grpAscenseur = grpAscenseur;
     }
 
     @Override

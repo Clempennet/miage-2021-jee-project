@@ -1,5 +1,6 @@
 package fr.pantheonsorbonne.ufr27.miage.camel;
 import fr.pantheonsorbonne.ufr27.miage.exception.ExpiredTransitionalTicketException;
+import fr.pantheonsorbonne.ufr27.miage.exception.HsException;
 import fr.pantheonsorbonne.ufr27.miage.service.AscenseurService;
 import org.apache.camel.CamelContext;
 import org.apache.camel.CamelExecutionException;
@@ -23,6 +24,9 @@ public class CamelRoutes extends RouteBuilder {
     AscenseurGateway ascenseurGateway;
 
     @Inject
+    TechGateway techGateway;
+
+    @Inject
     AscenseurService ascenseurService;
 
     @Inject
@@ -44,12 +48,15 @@ public class CamelRoutes extends RouteBuilder {
 
 
         from("jms:" + jmsPrefix + "move")
-                .bean(ascenseurService, "move");;
+                .bean(ascenseurService, "move");
 
+        onException(HsException.class)
+                .bean(techGateway, "sendHsAlert");
 
 
         from("direct:technicien")
-                .to("jms:topic:" + jmsPrefix + "repair");
+                .marshal().json()
+                .to("jms:queue/miage.MATHIKARAN.repair");
 
         from("direct:alert")
                 .to("jms:topic:" + jmsPrefix + "alert");
@@ -64,5 +71,6 @@ public class CamelRoutes extends RouteBuilder {
 
 
     }
+
 
 }

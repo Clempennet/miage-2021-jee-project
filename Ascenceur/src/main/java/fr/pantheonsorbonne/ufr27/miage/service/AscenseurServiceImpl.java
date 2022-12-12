@@ -1,6 +1,7 @@
 package fr.pantheonsorbonne.ufr27.miage.service;
 
 import fr.pantheonsorbonne.ufr27.miage.camel.AscenseurGateway;
+import fr.pantheonsorbonne.ufr27.miage.camel.TechGateway;
 import fr.pantheonsorbonne.ufr27.miage.dto.Ascenseur;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -17,6 +18,9 @@ public class AscenseurServiceImpl implements AscenseurService{
 
     @Inject
     AscenseurGateway ascenseurGateway;
+
+    @Inject
+    TechGateway techGateway;
 
     @Override
     @Transactional
@@ -66,6 +70,9 @@ public class AscenseurServiceImpl implements AscenseurService{
     @Transactional
     public Ascenseur getAscenseur(int id){
         Ascenseur ascenseur = em.find(Ascenseur.class, id);
+        if(ascenseur.isInError()){
+            techGateway.sendHsAlert(ascenseur);
+        }
         return ascenseur;
     }
 
