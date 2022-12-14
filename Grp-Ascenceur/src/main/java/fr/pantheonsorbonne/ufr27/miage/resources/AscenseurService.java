@@ -11,7 +11,7 @@ import java.util.List;
 
 @Path("group")
 @RegisterRestClient(configKey = "group-api")
-public interface AscenseurRessource {
+public interface AscenseurService {
 
     @Path("{group}/{sens}")
     @POST

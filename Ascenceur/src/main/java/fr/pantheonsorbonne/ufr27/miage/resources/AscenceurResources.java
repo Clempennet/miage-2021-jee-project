@@ -12,12 +12,11 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 @Path("group")
-public class AscenceurService {
+public class AscenceurResources {
 
     @Inject
     FloorService floorService;
