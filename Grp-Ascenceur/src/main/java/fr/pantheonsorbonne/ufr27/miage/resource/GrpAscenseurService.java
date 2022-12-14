@@ -7,10 +7,7 @@ import fr.pantheonsorbonne.ufr27.miage.service.AppelerAscenseur;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
 
 @Path("/")
 public class GrpAscenseurService {
@@ -23,11 +20,11 @@ public class GrpAscenseurService {
     @Inject
     fr.pantheonsorbonne.ufr27.miage.camel.grpAscenseurGateway grpAscenseurGateway;
 
-    @Path("/porte/{color}")
+    @Path("/ascenseur/{color}")
     @GET
-    public void entrer(@PathParam("color") String color) {
+    public void getAscenseur(@PathParam("color") String color) {
         //retourne ascenseur avec porte ouverte
-        appelerAscenseur.porte(color);
+        appelerAscenseur.getAscenseur(color);
 
     }
 
@@ -36,13 +33,13 @@ public class GrpAscenseurService {
     public String call(@PathParam("color") String color, @PathParam("etage") int etage) {
         //Appel tous les ascenseur d'une couleur à l'etage
 
-        grpAscenseurGateway.callAscenseur(color, etage);
+        appelerAscenseur.callAscenseur(color, etage);
 
         return "Vous avez appelé les ascenseurs " + color;
     }
 
     @Path("/ascenseur/{id}/{passengerName}")
-    @GET
+    @POST
     public passenger entrer(@PathParam("id") int id, @PathParam("passengerName") String name) {
         //Usager entre dans l'ascenseur id
 
@@ -54,13 +51,13 @@ public class GrpAscenseurService {
     public String etageSelect(@PathParam("etage") int etage, @PathParam("idAscenseur") int idAscenseur) {
         //Selectionne l'étage auquel veut se rendre l'usager
 
-        grpAscenseurGateway.select(etage,idAscenseur);
+        appelerAscenseur.select(etage,idAscenseur);
 
         return "Vous êtes au  " + etage + "em étage";
     }
 
     @Path("/passager/{passengerId}")
-    @GET
+    @DELETE
     public void sortir(@PathParam("passengerId") int id) {
         //Usager entre dans l'ascenseur id
 

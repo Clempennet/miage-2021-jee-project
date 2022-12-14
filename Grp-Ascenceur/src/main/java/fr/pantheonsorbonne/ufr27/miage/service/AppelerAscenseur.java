@@ -10,10 +10,14 @@ import java.util.List;
 public interface AppelerAscenseur {
 
 
-    void porte(String color);
-    void portee(int id);
+    void getAscenseur(String color);
+
 
     passenger entrer(int id, String name);
 
     void sortir(int id);
+
+    void callAscenseur(String color, int etage);
+
+    void select(int etage, int idAscenseur);
 }

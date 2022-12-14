@@ -44,41 +44,34 @@ public class AscenseurServiceImpl implements AscenseurService {
 
     @Override
     @Transactional
-    public void porte(String color) {
-        int id = 0;
+    public void getAscenseur(String color) {
+        List<Integer> l = new ArrayList<>();
         if(color.equals("R")){
             for (int i = 1;i<=5;i++){
                 Ascenseur a = em.find(Ascenseur.class, i);
-                if(a.isDoorOpen()==true){
-                    id = a.getId();
+                if(a.isInError()==false){
+                    l.add(a.getEtage());
                 }
             }
         }
-        if(color.equals("R")){
-            for (int i = 1;i<=5;i++){
-                Ascenseur a = em.find(Ascenseur.class, i);
-                if(a.isDoorOpen()==true){
-                    id = a.getId();
-                }
-            }
-        }
+
         if(color.equals("J")){
             for (int i = 6;i<=7;i++){
                 Ascenseur a = em.find(Ascenseur.class, i);
-                if(a.isDoorOpen()==true){
-                    id = a.getId();
+                if(a.isInError()==false){
+                    l.add(a.getEtage());
                 }
             }
         }
         if(color.equals("V")){
             for (int i = 8;i<=10;i++){
                 Ascenseur a = em.find(Ascenseur.class, i);
-                if(a.isDoorOpen()==true){
-                    id = a.getId();
+                if(a.isInError()==false){
+                    l.add(a.getEtage());
                 }
             }
         }
-        ascenseurGateway.porte(id);
+        System.out.println(l);
     }
 
 

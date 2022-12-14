@@ -55,12 +55,10 @@ public class CamelRoutes extends RouteBuilder {
         from("direct:select")
                 .to("jms:" + jmsPrefix + "select");
 
-        from("jms:" + jmsPrefix + "porte")
-                .bean(appelerAscenseur, "portee");
 
 
-        from("direct:porte")
-                .to("jms:" + jmsPrefix + "porte");
+        from("direct:getAscenseur")
+                .to("jms:" + jmsPrefix + "getAscenseur");
 
 
 

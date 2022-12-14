@@ -11,6 +11,6 @@ public interface AscenseurService {
     @Transactional
     void select(List<Integer> l);
     @Transactional
-    void porte(String color);
+    void getAscenseur(String color);
 
 }

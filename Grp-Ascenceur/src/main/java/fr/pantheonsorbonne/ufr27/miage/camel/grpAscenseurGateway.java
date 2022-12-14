@@ -88,9 +88,9 @@ public class grpAscenseurGateway {
         }
     }
 
-    public void porte(String color) {
+    public void getAscenseur(String color) {
         try (ProducerTemplate producerTemplate = camelContext.createProducerTemplate()) {
-            producerTemplate.sendBody("direct:porte", color);
+            producerTemplate.sendBody("direct:getAscenseur", color);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

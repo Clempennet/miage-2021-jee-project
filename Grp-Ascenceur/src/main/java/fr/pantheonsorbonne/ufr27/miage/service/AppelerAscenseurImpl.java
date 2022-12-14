@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.util.List;
 
 @ApplicationScoped
 public class AppelerAscenseurImpl implements AppelerAscenseur {
@@ -21,13 +22,8 @@ public class AppelerAscenseurImpl implements AppelerAscenseur {
 
 
     @Override
-    public void porte(String color) {
-        grpAscenseurGateway.porte(color);
-    }
-
-    @Override
-    public void portee(int id) {
-        System.out.println("l'ascenseur "+id +" est ouvert");
+    public void getAscenseur(String color) {
+        grpAscenseurGateway.getAscenseur(color);
     }
 
     @Override
@@ -44,5 +40,17 @@ public class AppelerAscenseurImpl implements AppelerAscenseur {
     @Transactional
     public void sortir(int id) {
         em.remove(em.find(passenger.class,id));
+    }
+
+    @Override
+    @Transactional
+    public void callAscenseur(String color, int etage) {
+        grpAscenseurGateway.callAscenseur(color,etage);
+    }
+
+    @Override
+    @Transactional
+    public void select(int etage, int idAscenseur) {
+        grpAscenseurGateway.select(etage,idAscenseur);
     }
 }

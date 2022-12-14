@@ -22,4 +22,6 @@ public interface AscenseurGateway {
     void getGroup(List l);
 
     void porte(int id);
+
+    void getAscenseur(List<Integer> l);
 }

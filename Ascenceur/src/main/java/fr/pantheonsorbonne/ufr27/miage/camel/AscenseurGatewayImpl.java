@@ -154,6 +154,15 @@ public class AscenseurGatewayImpl implements AscenseurGateway {
         }
     }
 
+    @Override
+    public void getAscenseur(List<Integer> l) {
+        try (ProducerTemplate producerTemplate = camelContext.createProducerTemplate()) {
+            producerTemplate.sendBody("direct:getAscenseur",l);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void open(Ascenseur a){
         try (ProducerTemplate producerTemplate = camelContext.createProducerTemplate()) {
             producerTemplate.sendBody("direct:open",a.getId());
