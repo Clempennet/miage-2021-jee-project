@@ -1,16 +1,12 @@
 package fr.pantheonsorbonne.ufr27.miage.dao;
 
 import fr.pantheonsorbonne.ufr27.miage.dto.Ascenseur;
-import fr.pantheonsorbonne.ufr27.miage.exception.AscenseurHSException;
-import fr.pantheonsorbonne.ufr27.miage.exception.NoAscenseurAvailableException;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.Collection;
-import java.util.List;
 
 @ApplicationScoped
 public class AscenseurDAOImpl implements AscenseurDAO{
@@ -21,24 +17,22 @@ public class AscenseurDAOImpl implements AscenseurDAO{
     @Override
     public Collection<Ascenseur> verifAvailabilityGroup(String group, boolean sens) {
 
-            Collection<Ascenseur> ascAvailable = em.createQuery("select a from Ascenseur a where a.isInError = false and a.grpColor = :group and a.isGoingUp = :sens")
+            return em.createQuery("select a from Ascenseur a where a.grpColor = :group and a.isGoingUp = :sens")
                     .setParameter("sens", sens)
                     .setParameter("group", group)
                     .getResultList();
-            return ascAvailable;
-
 
     }
 
     @Override
     public Collection<Ascenseur> verifAvailabilityAtFloor(String group, boolean sens, int floor){
 
-            Collection<Ascenseur> ascAvailable = em.createQuery("select a from Ascenseur a where a.isInError = false and a.grpColor = :group and a.isGoingUp = :sens and a.currentEtage = :floor")
+            return em.createQuery("select a from Ascenseur a where a.isInError = false and a.grpColor = :group and a.isGoingUp = :sens and a.currentEtage = :floor")
                     .setParameter("sens", sens)
                     .setParameter("group", group)
                     .setParameter("floor", floor)
                     .getResultList();
-            return ascAvailable;
+
 
 
     }
@@ -47,11 +41,10 @@ public class AscenseurDAOImpl implements AscenseurDAO{
     @Transactional
     public String getServedFloors(String group, int idAsc){
 
-            String floors = (String) em.createQuery("select a.servedFloors from Ascenseur a where a.isInError = false and a.id = :idAsc and a.grpColor = :group")
+            return  (String) em.createQuery("select a.servedFloors from Ascenseur a where a.isInError = false and a.id = :idAsc and a.grpColor = :group")
                     .setParameter("idAsc", idAsc)
                     .setParameter("group", group)
                     .getSingleResult();
-            return floors;
 
     }
 
@@ -68,10 +61,10 @@ public class AscenseurDAOImpl implements AscenseurDAO{
     @Override
     public String getSelectedFloors(int idAsc) {
 
-        String floors = (String) em.createQuery("select a.selectedFloors from Ascenseur a where a.isInError = false and a.id = :idAsc")
+        return (String) em.createQuery("select a.selectedFloors from Ascenseur a where a.isInError = false and a.id = :idAsc")
                 .setParameter("idAsc", idAsc)
                 .getSingleResult();
-        return floors;
+
     }
 
     @Override
@@ -82,6 +75,11 @@ public class AscenseurDAOImpl implements AscenseurDAO{
                 .setParameter("idAsc", idAsc)
                 .executeUpdate();
         return true;
+    }
+
+    @Override
+    public Collection<Ascenseur> getStates() {
+       return em.createQuery("select a from Ascenseur a").getResultList();
     }
 
 

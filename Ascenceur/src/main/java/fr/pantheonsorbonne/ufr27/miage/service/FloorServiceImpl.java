@@ -1,5 +1,6 @@
 package fr.pantheonsorbonne.ufr27.miage.service;
 
+import fr.pantheonsorbonne.ufr27.miage.camel.TechGateway;
 import fr.pantheonsorbonne.ufr27.miage.dao.AscenseurDAO;
 import fr.pantheonsorbonne.ufr27.miage.dto.Ascenseur;
 import fr.pantheonsorbonne.ufr27.miage.exception.AscenseurHSException;
@@ -20,6 +21,9 @@ public class FloorServiceImpl implements FloorService{
     @Inject
     AscenseurDAO ascDAO;
 
+    @Inject
+    TechGateway techGateway;
+
     @Override
     public void goToFloor(String floor,String group, int idAsc) throws AscenseurHSException, NotServedFloorException {
 
@@ -30,9 +34,6 @@ public class FloorServiceImpl implements FloorService{
             throw new NotServedFloorException();
         }
 
-        if(lineFloor.isEmpty()){
-            throw new AscenseurHSException();
-        }
         if(!lineFloor.contains(floor)){
             ascDAO.addFloor(floor, idAsc);
         }
@@ -44,12 +45,12 @@ public class FloorServiceImpl implements FloorService{
     }
 
     @Override
-    public List<Integer> getServedFloors(String group, int idAsc) throws AscenseurHSException {
+    public List<Integer> getServedFloors(String group, int idAsc) throws NoAscenseurAvailableException {
 
         List<String> lineeFloor = Arrays.asList(ascDAO.getServedFloors(group, idAsc).split(";"));
 
         if(lineeFloor.isEmpty()){
-            throw new AscenseurHSException();
+            throw new NoAscenseurAvailableException();
         }
         List<Integer> listFloor = new ArrayList<>();
         for (String s : lineeFloor){
@@ -71,11 +72,20 @@ public class FloorServiceImpl implements FloorService{
             sensAsc = false;
         }
         Collection<Ascenseur> ascenseurs = ascDAO.verifAvailabilityGroup(group,sensAsc);
-
+        List<Ascenseur> ascenseursAvailable = new ArrayList<>() ;
+        
+        for(Ascenseur as : ascenseurs){
+            if(as.isInError()){
+                techGateway.sendHsAlert(as);
+            }
+            else{
+                ascenseursAvailable.add(as);
+            }
+        }
         if (ascenseurs.isEmpty()){
             throw new NoAscenseurAvailableException();
         }
-        return ascenseurs;
+        return ascenseursAvailable;
     }
 
     @Override

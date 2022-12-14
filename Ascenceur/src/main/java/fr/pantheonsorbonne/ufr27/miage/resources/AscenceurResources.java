@@ -51,7 +51,7 @@ public class AscenceurResources {
     public List<Integer> getServedFloor(@PathParam("group") String group, @PathParam("idASc") String idASc){
         try {
             return floorService.getServedFloors(group,Integer.parseInt(idASc));
-        } catch (AscenseurHSException e) {
+        } catch (NoAscenseurAvailableException e) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
     }

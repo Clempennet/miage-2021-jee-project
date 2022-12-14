@@ -1,12 +1,13 @@
 package fr.pantheonsorbonne.ufr27.miage.dto;
 
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class Ascenseur {
 
+
+    int id;
     int currentEtage; boolean isGoingUp; boolean isInError; boolean isDoorOpen;
 
     String color;
@@ -14,7 +15,7 @@ public class Ascenseur {
 
     List<Integer>  servedFloors ;
 
-    public Ascenseur(int currentEtage, boolean isGoingUp, boolean isInError, boolean isDoorOpen, List<Integer> servedFloors, List<Integer>  selectedFloors, String color ) {
+    public Ascenseur(int id, int currentEtage, boolean isGoingUp, boolean isInError, boolean isDoorOpen, List<Integer> servedFloors, List<Integer>  selectedFloors, String color ) {
         this.currentEtage = currentEtage;
         this.isGoingUp = isGoingUp;
         this.isInError = isInError;
@@ -22,6 +23,14 @@ public class Ascenseur {
         this.servedFloors = servedFloors;
         this.selectedFloors = selectedFloors;
         this.color = color;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getcurrentEtage() {

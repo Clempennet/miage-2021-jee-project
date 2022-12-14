@@ -1,8 +1,6 @@
 package fr.pantheonsorbonne.ufr27.miage.dao;
 
 import fr.pantheonsorbonne.ufr27.miage.dto.Ascenseur;
-import fr.pantheonsorbonne.ufr27.miage.exception.AscenseurHSException;
-import fr.pantheonsorbonne.ufr27.miage.exception.NoAscenseurAvailableException;
 
 import java.util.Collection;
 
@@ -19,4 +17,6 @@ public interface AscenseurDAO {
     public String getSelectedFloors(int idAsc);
 
     public boolean deleteFloor(String updatedSelectFloors, int idAsc);
+
+    Collection<Ascenseur> getStates();
 }

@@ -13,7 +13,7 @@ public interface FloorService {
 
     Collection<Ascenseur> getAvailableAtFloor(String color, String sens, String floor) throws NoAscenseurAvailableException;
 
-    List<Integer> getServedFloors(String group, int idAsc) throws AscenseurHSException;
+    List<Integer> getServedFloors(String group, int idAsc) throws NoAscenseurAvailableException;
 
     Collection<Ascenseur> verifyAvailabilityGroup(String color, String sens) throws NoAscenseurAvailableException;
 
