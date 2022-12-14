@@ -6,10 +6,11 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 public interface AscenseurService {
-    public  void move(int idAscenseur, int etage) throws InterruptedException;
+    public  void move(int idAscenseur, int etage);
 
     @Transactional
-    void select(List<Integer> l) throws InterruptedException;
-
+    void select(List<Integer> l);
+    @Transactional
+    void porte(String color);
 
 }

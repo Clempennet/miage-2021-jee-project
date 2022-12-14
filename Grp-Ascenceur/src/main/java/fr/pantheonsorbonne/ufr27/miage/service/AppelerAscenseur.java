@@ -1,19 +1,19 @@
 package fr.pantheonsorbonne.ufr27.miage.service;
 
 import fr.pantheonsorbonne.ufr27.miage.dto.Ascenseur;
+import fr.pantheonsorbonne.ufr27.miage.model.passenger;
 
 import javax.transaction.Transactional;
 import java.util.Collection;
+import java.util.List;
 
 public interface AppelerAscenseur {
 
 
-    @Transactional
-    void sortir(int etage);
+    void porte(String color);
+    void portee(int id);
 
-    @Transactional
-    void entrer(int etage);
+    passenger entrer(int id, String name);
 
-    @Transactional
-    void fin(int etage);
+    void sortir(int id);
 }

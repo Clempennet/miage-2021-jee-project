@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @ApplicationScoped
@@ -41,9 +42,44 @@ public class AscenseurServiceImpl implements AscenseurService {
         ascenseurGateway.sortir(etage);
     }
 
-
-
-
+    @Override
+    @Transactional
+    public void porte(String color) {
+        int id = 0;
+        if(color.equals("R")){
+            for (int i = 1;i<=5;i++){
+                Ascenseur a = em.find(Ascenseur.class, i);
+                if(a.isDoorOpen()==true){
+                    id = a.getId();
+                }
+            }
+        }
+        if(color.equals("R")){
+            for (int i = 1;i<=5;i++){
+                Ascenseur a = em.find(Ascenseur.class, i);
+                if(a.isDoorOpen()==true){
+                    id = a.getId();
+                }
+            }
+        }
+        if(color.equals("J")){
+            for (int i = 6;i<=7;i++){
+                Ascenseur a = em.find(Ascenseur.class, i);
+                if(a.isDoorOpen()==true){
+                    id = a.getId();
+                }
+            }
+        }
+        if(color.equals("V")){
+            for (int i = 8;i<=10;i++){
+                Ascenseur a = em.find(Ascenseur.class, i);
+                if(a.isDoorOpen()==true){
+                    id = a.getId();
+                }
+            }
+        }
+        ascenseurGateway.porte(id);
+    }
 
 
 

@@ -1,6 +1,7 @@
 package fr.pantheonsorbonne.ufr27.miage.camel;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 public interface AscenseurGateway {
     void sendEtageActuelR(int etage) throws InterruptedException;
@@ -17,4 +18,8 @@ public interface AscenseurGateway {
     void fin(int idAscenseur);
 
     void sortir(int etage);
+    @Transactional
+    void getGroup(List l);
+
+    void porte(int id);
 }

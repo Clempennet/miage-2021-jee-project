@@ -46,21 +46,23 @@ public class CamelRoutes extends RouteBuilder {
         from("direct:entrer")
                 .to("jms:" + jmsPrefix + "entrer");
 
-        from("jms:" + jmsPrefix + "entrer")
-                .bean(appelerAscenseur,"entrer");
 
         from("direct:fin")
                 .to("jms:" + jmsPrefix + "fin");
 
-        from("jms:" + jmsPrefix + "fin")
-                .bean(appelerAscenseur,"fin");
 
 
         from("direct:select")
                 .to("jms:" + jmsPrefix + "select");
 
-        from("jms:" + jmsPrefix + "sortir")
-                .bean(appelerAscenseur,"sortir");
+        from("jms:" + jmsPrefix + "porte")
+                .bean(appelerAscenseur, "portee");
+
+
+        from("direct:porte")
+                .to("jms:" + jmsPrefix + "porte");
+
+
 
 
         from("direct:move")
@@ -68,8 +70,7 @@ public class CamelRoutes extends RouteBuilder {
 
 
 
-        from("jms:" + jmsPrefix + "isOpen")
-                .bean(appelerAscenseur,"entrer");
+
 
 
 

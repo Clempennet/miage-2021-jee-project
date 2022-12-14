@@ -74,6 +74,13 @@ public class CamelRoutes extends RouteBuilder {
         from("direct:fin")
                 .to("jms:topic:" + jmsPrefix + "fin");
 
+        from("jms:" + jmsPrefix + "porte")
+                .bean(ascenseurService, "porte");
+
+
+        from("direct:porte")
+                .to("jms:topic:" + jmsPrefix + "porte");
+
 
         from("direct:technicien")
                 .to("jms:topic:" + jmsPrefix + "repair");
