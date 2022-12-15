@@ -28,14 +28,14 @@ public class CamelRoutes extends RouteBuilder {
 
         from("direct:technician")
                 .marshal().json()
-                .to("jms:"+jmsPrefix+"repair");
+                .to("jms:queue:"+jmsPrefix+":repair");
 
-        from("cron:tab?schedule=0/* * * 15 * * *")
-                .bean(reportService, "sendReport()");
+        /*from("cron:tab?schedule=0/* * * 15 * * *")
+                .bean(reportService, "sendReport()");*/
 
         from("direct:report")
                 .marshal().json()
-                .to("jms:"+jmsPrefix+"report");
+                .to("jms:queue:"+jmsPrefix+"report");
     }
 
 }

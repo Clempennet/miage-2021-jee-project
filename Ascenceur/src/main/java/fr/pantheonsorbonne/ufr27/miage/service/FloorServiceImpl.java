@@ -9,7 +9,6 @@ import fr.pantheonsorbonne.ufr27.miage.exception.NotServedFloorException;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.persistence.NoResultException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -32,6 +31,11 @@ public class FloorServiceImpl implements FloorService{
 
         if(!servedFloor.contains(floor)){
             throw new NotServedFloorException();
+        }
+
+        if(servedFloor.isEmpty()){
+            techGateway.sendHsAlert(ascDAO.getHSAsc(idAsc));
+            throw new AscenseurHSException();
         }
 
         if(!lineFloor.contains(floor)){
@@ -62,7 +66,7 @@ public class FloorServiceImpl implements FloorService{
     }
 
     @Override
-    public Collection<Ascenseur> verifyAvailabilityGroup(String group, String sens) throws NoAscenseurAvailableException {
+    public boolean verifyAvailabilityGroup(String group, String sens) throws NoAscenseurAvailableException {
 
         boolean sensAsc = false;
         if(sens.equals("up")){
@@ -71,21 +75,14 @@ public class FloorServiceImpl implements FloorService{
         if(sens.equals("down")){
             sensAsc = false;
         }
+
         Collection<Ascenseur> ascenseurs = ascDAO.verifAvailabilityGroup(group,sensAsc);
-        List<Ascenseur> ascenseursAvailable = new ArrayList<>() ;
-        
-        for(Ascenseur as : ascenseurs){
-            if(as.isInError()){
-                techGateway.sendHsAlert(as);
-            }
-            else{
-                ascenseursAvailable.add(as);
-            }
-        }
+
+
         if (ascenseurs.isEmpty()){
             throw new NoAscenseurAvailableException();
         }
-        return ascenseursAvailable;
+        return true;
     }
 
     @Override
@@ -122,5 +119,6 @@ public class FloorServiceImpl implements FloorService{
         }
         ascDAO.deleteFloor(updatedSelectFloors.toString(), idAsc);
     }
+
 
 }

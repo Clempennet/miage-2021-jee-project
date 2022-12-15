@@ -15,7 +15,8 @@ public interface FloorService {
 
     List<Integer> getServedFloors(String group, int idAsc) throws NoAscenseurAvailableException;
 
-    Collection<Ascenseur> verifyAvailabilityGroup(String color, String sens) throws NoAscenseurAvailableException;
+    boolean verifyAvailabilityGroup(String color, String sens) throws NoAscenseurAvailableException;
 
     void deleteFloor(String floor, int idAsc) throws NotServedFloorException;
+
 }

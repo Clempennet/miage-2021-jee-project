@@ -17,11 +17,11 @@ public class AscenseurDAOImpl implements AscenseurDAO{
     @Override
     public Collection<Ascenseur> verifAvailabilityGroup(String group, boolean sens) {
 
-            return em.createQuery("select a from Ascenseur a where a.grpColor = :group and a.isGoingUp = :sens")
+            Collection<Ascenseur> avAsc = em.createQuery("select a from Ascenseur a where a.isInError = false and a.grpColor = :group and a.isGoingUp = :sens")
                     .setParameter("sens", sens)
                     .setParameter("group", group)
                     .getResultList();
-
+            return avAsc;
     }
 
     @Override
@@ -82,5 +82,11 @@ public class AscenseurDAOImpl implements AscenseurDAO{
        return em.createQuery("select a from Ascenseur a").getResultList();
     }
 
+    @Override
+    public Ascenseur getHSAsc(int idAsc) {
+        return (Ascenseur) em.createQuery("select a from Ascenseur a where a.id = :id and a.isInError = true")
+                .setParameter("id", idAsc)
+                .getSingleResult();
+    }
 
 }

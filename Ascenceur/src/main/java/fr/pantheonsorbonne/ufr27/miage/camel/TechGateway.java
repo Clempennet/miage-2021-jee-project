@@ -4,11 +4,13 @@ import fr.pantheonsorbonne.ufr27.miage.dto.Ascenseur;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Collection;
 
+@ApplicationScoped
 public class TechGateway {
 
     @Inject

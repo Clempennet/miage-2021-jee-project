@@ -28,7 +28,7 @@ public class CamelRoutes extends RouteBuilder {
         camelContext.setTracing(true);
 
 
-        from("jms:" + jmsPrefix + "repair")//
+        from("jms:queue:" + jmsPrefix + "repair")//
                 .choice()
                 .when(header("GrpAscenseur").isEqualTo("R"))
                 .to("file:data/rouge")
@@ -39,7 +39,7 @@ public class CamelRoutes extends RouteBuilder {
                 .log("error received:"+ LocalDate.now());
 
 
-        from("jms:" + jmsPrefix + "report")
+        from("jms:queue:" + jmsPrefix + "report")
                 .to("file:data/report")
                 .log("report received : "+ LocalDate.now());
 

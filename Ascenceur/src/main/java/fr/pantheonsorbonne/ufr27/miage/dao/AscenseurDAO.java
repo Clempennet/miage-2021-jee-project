@@ -19,4 +19,6 @@ public interface AscenseurDAO {
     public boolean deleteFloor(String updatedSelectFloors, int idAsc);
 
     Collection<Ascenseur> getStates();
+
+    Ascenseur getHSAsc(int idAsc);
 }
