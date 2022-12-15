@@ -1,61 +1,33 @@
 ## Objectifs du système à modéliser
 
-On propose de modéliser un système de réservation (master) de tickets pouvant supporter plusieurs vendeurs (vendor). Le système master gère les salles, les concerts, les différents artistes se produisant dans les concerts et la réservation des tickets alors que les vendeurs assurent la vente de billets. Chaque vendeur a un quota pour un concert donné, qui peut évoluer avec le temps.
-En cas d'annulation de concert, le système de réservation informe les vendors qui doivent contacter les clients (customers). Le master propose des services de validation de l'authenticité des tickets à l'entrée des concerts.
+On propose de modéliser un système d'ascenseurs.
 
-Lors de la réservation de ticket, on a 2 phases:
-- le booking (réservation des places)
-- le ticketing (émission de billets sécurisés avec clé.)
+Un usager fait appel à un groupe d'ascenseur.
+Ce groupe d'ascenseur communique avec les ascenseurs afin de déterminer lequel sera dirigé vers l'usager.
+Enfin, les ascenseurs envoie des messages aux techniciens lorsque l'un des ascenseurs appelé est hors service.
 
-Le vendor va demander au master via une API rest les concerts pour lesquels il possède un quota. Seuls ces concerts seront proposés à la vente au client.
-Le client spécifie ensuite le nombre de places assises et le nombre de places debout qu'il souhaite acheter. Le vendor interroge le master sur la disponibilité. Celui-ci va lui renvoyer des tickets transitionnels valables 10 minutes en cas de disponibilité de places.
-Le vendeur va ensuite renseigner les informations du client et les transmettre au master pour l'émission finale des tickets avec clé sécurisée qui sera transmise au client pour qu'il puisse entrer dans la salle.
-En cas d'annulation du concert, le master prévient les vendors (avec les informations des tickets à annuler et les emails des clients) le vendeur doit envoyer un email au client pour chaque ticket annulé.
+Le groupe d'ascenseur demande aupres de tous les ascenseurs un ascenseur basé sur le sens, l'appartenance aux groupes, l'etat de l'ascenseur, les étages desservis.
+Ensuite, une fois l'ascenseur selectionné, il est possible de sélectionner l'étage auquel nous souhaitons nous rendre et qui est desservis par l'ascenseur.
 
-## Interfaces
+* Ascenseur -> REST & JMS
+* Grp-Ascenseur -> Rest Client
+* Technicien -> JMS
 
-```
-artist->master: POST venue
-vendor->master: GET Gigs
-master->vendor: Collection<Gigs>
-
-Customer->vendor: cli:gig selection
-
-vendor->master: jms:booking
-alt booking successfull
-    master->vendor: transitional tickets
-    vendor->Customer: ticket purshase ok
-    Customer->vendor: cli:customer informations
-    
-    vendor->master: jms:ticketing
-    master->vendor: tickets
-
-else booking unsuccessfull
-    master->vendor: no quota for gigs
-end
-
-opt venue cancellation
-    artist->master: DELETE venue
-    master->vendor: jms:topic:cancellation
-    vendor->Customer: smtp:cancellation email
-end
-```
-![](seqDiagram.png)
+![](Ascenseur.png)
 
 ## Schéma relationnel
 
-![](EER.png)
+![](schema.png)
 
 ## Exigences fonctionnelles
 
-* le vendor NE DOIT proposer que les concerts pour lesquels il a un quota disponible, transmis par le master.
-* le vendor DOIT pouvoir effectuer les opérations de booking et ticketing
-* le master DOIT permettre à l'artiste d'annuler son concert.
-* le master DOIT informer le vendor en cas d'annulation de concert
-* le vendor DOIT informer les clients de l'annulation du concert par mail
-* le master DOIT proposer un service de validation de la clé du ticket, pour les contrôles aux entées.
+* lors d'un appel à un groupe d'ascenseur, on doit avoir au moins un ascenseur opérationel
+* l'usager doit pouvoir connaitre les étages desservis
+* l'usager doit connaitre les etages déjà selectionné 
+* l'ascenseur doit envoyer un message au technicien lorsque son etat est HS
+* l'ascenseur prévient l'usager lorsqu'il est HS
+* l'ascenseur envoie un rapport d'etat des ascenseurs chaque mois
 
 ## Exigences non fonctionnelles
 
-* le booking et le ticketing, bien qu'étant des opérations synchrones, DOIVENT être fiables et donc utiliser le messaging
-* Lors de l'annulation de tickets, le master DOIT informer tous les vendors de l'annulation, de façon fiable.
+* On utilise du messaging pour la communication entre l'ascenseur et le Technicien, comme c'est un acteur externe et que le message doit etre transmis de manière fiable
