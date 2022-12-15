@@ -9,7 +9,9 @@ Enfin, les ascenseurs envoie des messages aux techniciens lorsque l'un des ascen
 Le groupe d'ascenseur demande aupres de tous les ascenseurs un ascenseur basé sur le sens, l'appartenance aux groupes, l'etat de l'ascenseur, les étages desservis.
 Ensuite, une fois l'ascenseur selectionné, il est possible de sélectionner l'étage auquel nous souhaitons nous rendre et qui est desservis par l'ascenseur.
 
-
+Ascenseur -> REST & JMS
+Grp-Ascenseur -> Rest Client
+Technicien -> JMS
 
 ![](Ascenseur.png)
 
@@ -28,4 +30,4 @@ Ensuite, une fois l'ascenseur selectionné, il est possible de sélectionner l'�
 
 ## Exigences non fonctionnelles
 
-* On utilise du messaging pour la communication avec le Technicien, comme c'est un acteur externe et que le message doit etre transmis de manière fiable
+* On utilise du messaging pour la communication entre l'ascenseur et le Technicien, comme c'est un acteur externe et que le message doit etre transmis de manière fiable
