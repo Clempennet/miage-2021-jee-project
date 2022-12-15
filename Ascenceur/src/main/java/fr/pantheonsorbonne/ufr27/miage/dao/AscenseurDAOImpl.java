@@ -1,6 +1,6 @@
 package fr.pantheonsorbonne.ufr27.miage.dao;
 
-import fr.pantheonsorbonne.ufr27.miage.dto.Ascenseur;
+import fr.pantheonsorbonne.ufr27.miage.model.Ascenseur;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
@@ -17,11 +17,10 @@ public class AscenseurDAOImpl implements AscenseurDAO{
     @Override
     public Collection<Ascenseur> verifAvailabilityGroup(String group, boolean sens) {
 
-            Collection<Ascenseur> avAsc = em.createQuery("select a from Ascenseur a where a.isInError = false and a.grpColor = :group and a.isGoingUp = :sens")
+            return em.createQuery("select a from Ascenseur a where a.isInError = false and a.grpColor = :group and a.isGoingUp = :sens")
                     .setParameter("sens", sens)
                     .setParameter("group", group)
                     .getResultList();
-            return avAsc;
     }
 
     @Override
@@ -84,9 +83,10 @@ public class AscenseurDAOImpl implements AscenseurDAO{
 
     @Override
     public Ascenseur getHSAsc(int idAsc) {
-        return (Ascenseur) em.createQuery("select a from Ascenseur a where a.id = :id and a.isInError = true")
+        Ascenseur asError = (Ascenseur) em.createQuery("select a from Ascenseur a where a.id = :id and a.isInError = true")
                 .setParameter("id", idAsc)
                 .getSingleResult();
+        return asError;
     }
 
 }

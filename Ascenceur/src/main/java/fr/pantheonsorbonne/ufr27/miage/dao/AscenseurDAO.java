@@ -1,6 +1,6 @@
 package fr.pantheonsorbonne.ufr27.miage.dao;
 
-import fr.pantheonsorbonne.ufr27.miage.dto.Ascenseur;
+import fr.pantheonsorbonne.ufr27.miage.model.Ascenseur;
 
 import java.util.Collection;
 

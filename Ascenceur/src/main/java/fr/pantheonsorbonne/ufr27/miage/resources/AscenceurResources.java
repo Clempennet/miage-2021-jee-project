@@ -1,6 +1,6 @@
 package fr.pantheonsorbonne.ufr27.miage.resources;
 
-import fr.pantheonsorbonne.ufr27.miage.dto.Ascenseur;
+import fr.pantheonsorbonne.ufr27.miage.model.Ascenseur;
 import fr.pantheonsorbonne.ufr27.miage.exception.AscenseurHSException;
 import fr.pantheonsorbonne.ufr27.miage.exception.NoAscenseurAvailableException;
 import fr.pantheonsorbonne.ufr27.miage.exception.NotServedFloorException;
@@ -36,7 +36,7 @@ public class AscenceurResources {
     @Path("{group}/{sens}/etage/{floor}/ascenseurs")
     @GET
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Collection<Ascenseur> getAvailableAtFloor(@PathParam("group") String group, @PathParam("sens") String sens, @PathParam("floor") String floor){
+    public Collection<Ascenseur> getAvailableAtFloor(@PathParam("group") String group, @PathParam("sens") String sens, @PathParam("floor") int floor){
         try {
             return floorService.getAvailableAtFloor(group,sens,floor);
         }
@@ -48,30 +48,30 @@ public class AscenceurResources {
     @Path("{group}/{sens}/etage/{floor}/ascenseurs/{idASc}")
     @GET
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public List<Integer> getServedFloor(@PathParam("group") String group, @PathParam("idASc") String idASc){
+    public List<Integer> getServedFloor(@PathParam("group") String group, @PathParam("idASc") int idASc){
         try {
-            return floorService.getServedFloors(group,Integer.parseInt(idASc));
+            return floorService.getServedFloors(group,idASc);
         } catch (NoAscenseurAvailableException e) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
     }
 
-    @Path("{group}/{sens}/etage/{floor}/ascenseurs/{idAsc}/{numFloor}")
+    @Path("{group}/{sens}/etage/{floor}/ascenseurs/{idAsc}")
     @PUT
-    public Response selectFloor(@PathParam("numFloor") String numFloor, @PathParam("idAsc") String idAsc, @PathParam("group") String group){
+    public Response selectFloor(@QueryParam("destination") String destination, @PathParam("idAsc") int idAsc, @PathParam("group") String group){
         try {
-            floorService.goToFloor(numFloor, group, Integer.parseInt(idAsc));
+            floorService.goToFloor(destination, group, idAsc);
             return Response.status(Response.Status.NO_CONTENT).build();
         } catch (AscenseurHSException | NotServedFloorException e ) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
 
-    @Path("{group}/{sens}/etage/{floor}/ascenseurs/{idAsc}/{numFloor}")
+    @Path("{group}/{sens}/etage/{floor}/ascenseurs/{idAsc}")
     @DELETE
-    public Response deleteFloor(@PathParam("numFloor") String numFloor, @PathParam("idAsc") String idAsc){
+    public Response deleteFloor(@QueryParam("destination") String destination, @PathParam("idAsc") int idAsc){
         try {
-             floorService.deleteFloor(numFloor, Integer.parseInt(idAsc));
+             floorService.deleteFloor(destination, idAsc);
             return Response.status(Response.Status.NO_CONTENT).build();
 
         }

@@ -28,7 +28,7 @@ public class CamelRoutes extends RouteBuilder {
 
         from("direct:technician")
                 .marshal().json()
-                .to("jms:queue:"+jmsPrefix+":repair");
+                .to("jms:queue:"+jmsPrefix+"repair");
 
         /*from("cron:tab?schedule=0/* * * 15 * * *")
                 .bean(reportService, "sendReport()");*/

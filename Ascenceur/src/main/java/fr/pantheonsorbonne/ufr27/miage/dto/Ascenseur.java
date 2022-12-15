@@ -1,7 +1,6 @@
 package fr.pantheonsorbonne.ufr27.miage.dto;
 
 
-import java.util.List;
 import java.util.Objects;
 
 public class Ascenseur {
@@ -11,11 +10,11 @@ public class Ascenseur {
     int currentEtage; boolean isGoingUp; boolean isInError; boolean isDoorOpen;
 
     String color;
-    List<Integer>  selectedFloors;
+    String  selectedFloors;
 
-    List<Integer>  servedFloors ;
+    String  servedFloors ;
 
-    public Ascenseur(int id, int currentEtage, boolean isGoingUp, boolean isInError, boolean isDoorOpen, List<Integer> servedFloors, List<Integer>  selectedFloors, String color ) {
+    public Ascenseur(int id, int currentEtage, boolean isGoingUp, boolean isInError, boolean isDoorOpen, String servedFloors, String  selectedFloors, String color ) {
         this.currentEtage = currentEtage;
         this.isGoingUp = isGoingUp;
         this.isInError = isInError;
@@ -73,19 +72,19 @@ public class Ascenseur {
         this.color = color;
     }
 
-    public List<Integer> getSelectedFloors() {
+    public String getSelectedFloors() {
         return selectedFloors;
     }
 
-    public void setSelectedFloors(List<Integer> selectedFloors) {
+    public void setSelectedFloors(String selectedFloors) {
         selectedFloors = selectedFloors;
     }
 
-    public List<Integer> getServedFloors() {
+    public String getServedFloors() {
         return servedFloors;
     }
 
-    public void setServedFloors(List<Integer> servedFloors) {
+    public void setServedFloors(String servedFloors) {
         servedFloors = servedFloors;
     }
 
