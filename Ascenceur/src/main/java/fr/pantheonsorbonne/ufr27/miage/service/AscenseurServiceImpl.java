@@ -74,6 +74,12 @@ public class AscenseurServiceImpl implements AscenseurService {
         System.out.println(l);
     }
 
+    @Override
+    @Transactional
+    public void repair(int id) {
+        Ascenseur a = em.find(Ascenseur.class,id);
+        a.setInError(false);
+    }
 
 
 }

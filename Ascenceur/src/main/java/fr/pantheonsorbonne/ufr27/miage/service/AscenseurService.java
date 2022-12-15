@@ -13,4 +13,6 @@ public interface AscenseurService {
     @Transactional
     void getAscenseur(String color);
 
+    void repair(int id);
+
 }

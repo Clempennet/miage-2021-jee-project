@@ -24,4 +24,6 @@ public interface AscenseurGateway {
     void porte(int id);
 
     void getAscenseur(List<Integer> l);
+
+    void error(int id);
 }
